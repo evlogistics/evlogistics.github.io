@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Site admin</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,Segoe UI,sans-serif;background:#eef3f9;color:#1b2a3d}
+button,input,textarea{font:inherit}
+.top{position:sticky;top:0;z-index:5;background:#0e1a2b;color:#fff;padding:.7rem 1rem;display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
+.top b{margin-right:auto}
+.btn{border:0;border-radius:5px;padding:.55rem 1rem;background:#1f7ae0;color:#fff;font-weight:600;cursor:pointer}
+.btn.alt{background:#fff;color:#0e1a2b}.btn.sm{padding:.3rem .6rem;font-size:.85rem}.btn.red{background:#c0392b}
+.btn:disabled{opacity:.5}
+#st{font-size:.9rem;color:#b8c7da}
+.lay{display:grid;grid-template-columns:220px 1fr;gap:1rem;max-width:1100px;margin:1rem auto;padding:0 1rem}
+.side button{display:block;width:100%;text-align:left;padding:.7rem .9rem;border:0;border-bottom:1px solid #e1e8f1;background:#fff;cursor:pointer}
+.side button.on{background:#1f7ae0;color:#fff}
+.box{background:#fff;border:1px solid #d9e3ef;border-radius:8px;padding:1rem;margin-bottom:1rem}
+.box h2{margin:0 0 .6rem;font-size:1.2rem}
+.hd{display:flex;gap:.4rem;align-items:center;margin-bottom:.6rem}.hd b{margin-right:auto}
+.fl{display:grid;gap:.25rem;margin-bottom:.8rem}.fl>b{font-size:.9rem}
+.fl input[type=text],textarea{width:100%;padding:.55rem .7rem;border:1px solid #b9c8da;border-radius:5px}
+textarea{min-height:90px}
+.pv{width:160px;height:100px;border:1px solid #b9c8da;border-radius:6px;background:#e8f1fc center/cover no-repeat}
+.pv.png{background-size:contain}
+details{background:#fff;border:1px solid #d9e3ef;border-radius:8px;padding:.8rem 1rem;margin:1rem auto;max-width:1068px;color:#1b2a3d}
+details input[type=text],details input[type=password]{padding:.5rem;border:1px solid #b9c8da;border-radius:5px;width:100%}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}
+small{color:#556579}
+.fl select,.fl input[type=date],.fl input[type=datetime-local]{width:100%;padding:.55rem .7rem;border:1px solid #b9c8da;border-radius:5px;background:#fff}
+.fp{border:1px solid #b9c8da;border-radius:8px;background:#fff;padding:.8rem 1rem}.fp b{display:block;font:700 1.3rem/1.2 var(--head);color:#0b2248}.fp span{font:400 1rem/1.5 var(--body)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.ev{border:1px solid #d9e3ef;border-radius:6px;padding:.6rem;margin:.5rem 0;background:#f7fafd}
+.num{font:700 1.15rem ui-monospace,Consolas,monospace;letter-spacing:.03em;color:#0b2248;word-break:break-all}
+.newbox{background:#e6f4ec;border:1px solid #9fd2b4;border-radius:8px;padding:.8rem 1rem;margin-bottom:1rem}
+.hash{font:.8rem ui-monospace,Consolas,monospace;color:#556579}
+@media(max-width:760px){.g2{grid-template-columns:1fr}}
+@media(max-width:760px){.lay{grid-template-columns:1fr}.side{display:flex;overflow-x:auto}.side button{width:auto;white-space:nowrap}}
+</style>
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script src="tracking.js"></script>
+</head>
+<body>
+<div class="top"><b>Site admin</b><span id="st">No changes</span>
+  <a class="btn alt" href="index.html" target="_blank" style="text-decoration:none">View site</a>
+  <button class="btn alt" id="dl">Download files</button><button class="btn" id="pub">Publish to GitHub</button></div>
+
+<details id="conn"><summary><b>Connect to GitHub</b> (needed to publish)</summary>
+  <p><small>Create a token at GitHub, Settings, Developer settings, Fine-grained tokens. Give it access to this one repository only, with Contents set to read and write. Only someone with that token can change the site.</small></p>
+  <div class="g3">
+    <label>Username<input type="text" id="o"></label><label>Repository<input type="text" id="r"></label>
+    <label>Branch<input type="text" id="br" value="main"></label><label>Token<input type="password" id="tk" autocomplete="off"></label></div>
+  <p><label><input type="checkbox" id="rm"> Remember on this device</label></p>
+</details>
+
+<div class="lay"><div class="side box" style="padding:0;overflow:hidden" id="side"></div><div id="main"></div></div>
+
+<script>
+const SCHEMA=[
+ {k:'site',label:'Company and contact',obj:1,f:[['name','Company name'],['font','Font style (pick one, preview shows below)','font'],['phone','Phone'],['email','Email'],['address','Address'],['hours','Opening hours'],['whatsapp','WhatsApp number (country code, no +)'],['formUrl','Contact form link (Formspree)'],['brochure','Brochure file name, e.g. Brochure.pdf (leave empty to hide)']]},
+ {k:'hero',label:'Top slides',item:'Slide',f:[['title','Headline'],['text','Text','area'],['btn','Button text'],['link','Button link, e.g. #about'],['image','Background picture','img']]},
+ {k:'about',label:'About us',obj:1,f:[['title','Heading'],['p1','Paragraphs (leave a blank line between paragraphs)','area'],['p2','Closing paragraph','area'],['why','Why work with us (one point per line)','area'],['image','Picture beside the text','img']]},
+ {k:'purpose',label:'Mission and vision',obj:1,f:[['mission','Mission','area'],['vision','Vision','area']]},
+ {k:'values',label:'Core values',item:'Value',f:[['title','Title'],['text','Text','area']]},
+ {k:'services',label:'Services',item:'Service',f:[['title','Title'],['short','Short line (on the card)'],['more','Full description (in the pop-up)','area'],['image','Picture','img']]},
+ {k:'gallery',label:'Gallery photos',item:'Photo',f:[['image','Photo','img'],['alt','Short description of the photo (helps accessibility and search)']]},
+ {k:'team',label:'Team',item:'Person',f:[['name','Name'],['role','Role'],['image','Photo','img']]},
+ {k:'quote',label:'Client quote',obj:1,f:[['text','Quote','area'],['by','Who said it']]},
+ {k:'partners',label:'Partner logos',item:'Logo',f:[['image','Logo (transparent PNG works best)','png']]}
+];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const data=JSON.parse(JSON.stringify(window.SITE||{}));
+const shown={},pending=new Set();let cur=0,dirty=false;
+const mark=()=>{dirty=true;$('#st').textContent='Unsaved changes'};
+window.onbeforeunload=e=>dirty?(e.preventDefault(),''):undefined;
+
+const TRK=SCHEMA.length;
+function side(){$('#side').innerHTML=SCHEMA.map((s,i)=>`<button class="${i==cur?'on':''}" data-s="${i}">${s.label}</button>`).join('')+`<button class="${cur==TRK?'on':''}" data-s="${TRK}">Shipment tracking</button>`}
+function fld(sec,it,i,[f,label,t]){
+ const v=it[f]||'';
+ if(t=='font'){const cur=v||'classic';
+  return `<div class="fl"><b>${label}</b><select data-f="${f}" data-i="${i}">${Object.entries(EVL.FONTS).map(([k,o])=>`<option value="${k}" ${k==cur?'selected':''}>${esc(o.label)}</option>`).join('')}</select>
+  <div class="fp" id="fp"><b>Eagle Vision Logistics</b><span>See Beyond the Horizon. Deliver Without Limits. Freight forwarding, customs clearance, warehousing and tracking.</span></div>
+  <small>Saved as the site font when you publish. To try fonts on the live site first, open it with <code>?font=clean</code> on the end of the address.</small></div>`}
+ if(t=='img'||t=='png'){const u=shown[v]||v;
+  return `<div class="fl"><b>${label}</b><div class="pv ${t=='png'?'png':''}" style="${u?`background-image:url('${u}')`:''}"></div>
+  <input type="file" accept="image/*" data-up="${f}" data-i="${i}" data-png="${t=='png'?1:0}">
+  ${v?`<div><button class="btn sm red" data-act="clr" data-f="${f}" data-i="${i}">Remove picture</button></div>`:''}</div>`}
+ return `<div class="fl"><b>${label}</b>${t=='area'?`<textarea data-f="${f}" data-i="${i}">${esc(v)}</textarea>`:`<input type="text" data-f="${f}" data-i="${i}" value="${esc(v)}">`}</div>`}
+function main(){
+ if(cur==TRK)return trkMain();
+ const s=SCHEMA[cur];let h='';
+ if(s.obj){data[s.k]=data[s.k]||{};h=`<div class="box"><h2>${s.label}</h2>${s.f.map(f=>fld(s,data[s.k],0,f)).join('')}</div>`}
+ else{data[s.k]=data[s.k]||[];
+  h=data[s.k].map((it,i)=>`<div class="box"><div class="hd"><b>${s.item} ${i+1}</b>
+   <button class="btn sm alt" style="border:1px solid #b9c8da" data-act="up" data-i="${i}" ${i?'':'disabled'}>Up</button>
+   <button class="btn sm alt" style="border:1px solid #b9c8da" data-act="down" data-i="${i}" ${i<data[s.k].length-1?'':'disabled'}>Down</button>
+   <button class="btn sm red" data-act="del" data-i="${i}">Delete</button></div>${s.f.map(f=>fld(s,it,i,f)).join('')}</div>`).join('')
+   +`<button class="btn" data-act="add">Add ${s.item.toLowerCase()}</button>`;
+  if(!data[s.k].length)h=`<div class="box">Nothing here yet, so this section is hidden on the site.</div>`+h}
+ $('#main').innerHTML=h;
+ const fp=$('#fp');if(fp)EVL.applyFont(data.site.font||'classic',fp)}
+function render(){side();main()}
+
+$('#side').onclick=e=>{const b=e.target.closest('[data-s]');if(b){cur=+b.dataset.s;render()}};
+$('#main').oninput=e=>{const t=e.target,{f,i}=t.dataset;if(!f)return;const s=SCHEMA[cur];(s.obj?data[s.k]:data[s.k][i])[f]=t.value;if(f=='font'){const fp=$('#fp');if(fp)EVL.applyFont(t.value,fp)}mark()};
+$('#main').onclick=e=>{const b=e.target.closest('[data-act]');if(!b)return;const s=SCHEMA[cur],a=b.dataset.act,i=+b.dataset.i,L=data[s.k];
+ if(a=='add'){const o={};s.f.forEach(([f])=>o[f]='');L.push(o)}
+ else if(a=='del'){if(!confirm('Delete this item?'))return;L.splice(i,1)}
+ else if(a=='up'||a=='down'){const j=a=='up'?i-1:i+1;[L[i],L[j]]=[L[j],L[i]]}
+ else if(a=='clr'){(s.obj?L:L[i])[b.dataset.f]=''}
+ mark();render()};
+$('#main').onchange=async e=>{const t=e.target;if(!t.dataset.up||!t.files[0])return;
+ const s=SCHEMA[cur],png=t.dataset.png=='1',bmp=await createImageBitmap(t.files[0]),k=Math.min(1,1600/bmp.width),c=document.createElement('canvas');
+ c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+ const url=c.toDataURL(png?'image/png':'image/jpeg',.85),name=`images/${s.k}-${Date.now().toString(36)}.${png?'png':'jpg'}`;
+ shown[name]=url;pending.add(name);(s.obj?data[s.k]:data[s.k][+t.dataset.i])[t.dataset.up]=name;mark();render()};
+
+
+/* ================= Shipment tracking ================= */
+const trk=JSON.parse(JSON.stringify(window.TRACKING||{}));trk.shipments=trk.shipments||{};
+let trkDirty=false,lastNew='';
+const nums=(()=>{try{return JSON.parse(localStorage.getItem('evl-nums')||'{}')}catch(e){return{}}})();
+const saveNums=()=>{try{localStorage.setItem('evl-nums',JSON.stringify(nums))}catch(e){}};
+const tmark=()=>{trkDirty=true;mark()};
+const nowLocal=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,16);
+const genNum=()=>{const a='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint8Array(10)),s=[...r].map(x=>a[x%a.length]).join('');return`EVL-${s.slice(0,5)}-${s.slice(5)}`};
+const opts=(list,v)=>list.map(o=>`<option ${o==v?'selected':''}>${esc(o)}</option>`).join('');
+const tf=(h,f,label,v,type='text')=>`<div class="fl"><b>${label}</b><input type="${type}" data-tk="${h}" data-tf="${f}" value="${esc(v)}"></div>`;
+
+function trkMain(){
+ const hs=Object.keys(trk.shipments).reverse();
+ let h=`<div class="box"><h2>Shipment tracking</h2>
+  <p><small>Customers enter a tracking number in the Track section of the website. For privacy, only a scrambled (hashed) version of each number is published, so nobody can browse your shipments. Do not type customer names, phone numbers or other private details into these records, because they become public to anyone who has the tracking number. Keep your own list of which customer has which number.</small></p>
+  <button class="btn" data-ta="new">New shipment</button></div>`;
+ if(lastNew){const link=new URL('./?track='+encodeURIComponent(lastNew),location.href).href;
+  h+=`<div class="newbox"><b>New tracking number (give this to the customer):</b><div class="num">${esc(lastNew)}</div>
+   <small>Direct link: ${esc(link)}</small><div style="margin-top:.5rem"><button class="btn sm" data-ta="copy" data-v="${esc(lastNew)}">Copy number</button> <button class="btn sm alt" style="border:1px solid #9fd2b4" data-ta="copy" data-v="${esc(link)}">Copy link</button></div>
+   <small>Fill in the details below, then press Publish to GitHub. The number only works on the site after publishing.</small></div>`}
+ if(!hs.length)h+=`<div class="box">No shipments yet. Press New shipment to add one.</div>`;
+ h+=hs.map(k=>{const r=trk.shipments[k],n=nums[k];r.events=r.events||[];
+  return `<div class="box" data-box="${k}"><div class="hd"><div style="margin-right:auto">${n?`<div class="num">${esc(n)}</div>`:`<b>Number not known on this device</b><div class="hash">${k.slice(0,12)}…</div>`}</div>
+   <button class="btn sm red" data-ta="del" data-tk="${k}">Delete</button></div>
+   ${n?'':`<div class="fl"><b>Type the tracking number to unlock its label</b><div style="display:flex;gap:.4rem"><input type="text" id="un-${k}" placeholder="EVL-XXXXX-XXXXX"><button class="btn sm" data-ta="unlock" data-tk="${k}">Unlock</button></div></div>`}
+   <div class="g2"><div class="fl"><b>Mode</b><select data-tk="${k}" data-tf="mode">${opts(EVL.MODES,r.mode)}</select></div>
+   <div class="fl"><b>Current status</b><select data-tk="${k}" data-tf="status">${opts(EVL.STAGES,r.status)}</select></div>
+   ${tf(k,'origin','From (origin)',r.origin||'')}${tf(k,'destination','To (destination)',r.destination||'')}
+   ${tf(k,'eta','Estimated arrival',r.eta||'','date')}${tf(k,'cargo','Cargo description (keep it general)',r.cargo||'')}</div>
+   ${tf(k,'alert','Delay or hold notice (optional, shown in red)',r.alert||'')}
+   <b>Tracking updates</b>
+   ${r.events.map((e,j)=>`<div class="ev"><div class="g2"><div class="fl"><b>Date and time</b><input type="datetime-local" data-tk="${k}" data-ei="${j}" data-tf="date" value="${esc(e.date||'')}"></div>
+    <div class="fl"><b>Location</b><input type="text" data-tk="${k}" data-ei="${j}" data-tf="location" value="${esc(e.location||'')}"></div>
+    <div class="fl"><b>Update title</b><input type="text" data-tk="${k}" data-ei="${j}" data-tf="status" value="${esc(e.status||'')}"></div>
+    <div class="fl"><b>Note (optional)</b><input type="text" data-tk="${k}" data-ei="${j}" data-tf="note" value="${esc(e.note||'')}"></div></div>
+    <button class="btn sm red" data-ta="delev" data-tk="${k}" data-ei="${j}">Remove update</button></div>`).join('')}
+   <button class="btn sm" data-ta="addev" data-tk="${k}">Add update</button></div>`}).join('');
+ $('#main').innerHTML=h}
+
+$('#main').addEventListener('input',e=>{const t=e.target,{tk,tf,ei}=t.dataset;if(!tk||!tf)return;const r=trk.shipments[tk];if(!r)return;
+ if(ei!==undefined)r.events[+ei][tf]=t.value;else r[tf]=t.value;tmark()});
+$('#main').addEventListener('click',async e=>{const b=e.target.closest('[data-ta]');if(!b)return;const a=b.dataset.ta,k=b.dataset.tk,r=trk.shipments[k];
+ if(a=='new'){const n=genNum(),h=await EVL.hash(n);
+  trk.shipments[h]={mode:'Sea freight',origin:'',destination:'',status:'Booked',eta:'',cargo:'',alert:'',events:[{date:nowLocal(),location:'',status:'Booked',note:''}]};
+  nums[h]=n;saveNums();lastNew=n;tmark();trkMain()}
+ else if(a=='copy'){try{await navigator.clipboard.writeText(b.dataset.v);b.textContent='Copied'}catch(err){prompt('Copy this:',b.dataset.v)}}
+ else if(a=='del'){if(!confirm('Delete this shipment? Its tracking number will stop working once you publish.'))return;delete trk.shipments[k];delete nums[k];saveNums();tmark();trkMain()}
+ else if(a=='unlock'){const v=$('#un-'+k).value;if(!v.trim())return;const h=await EVL.hash(v);
+  if(h!==k){alert('That number does not match this shipment.');return}nums[k]=v.trim().toUpperCase();saveNums();trkMain()}
+ else if(a=='addev'){r.events.push({date:nowLocal(),location:'',status:r.status||'',note:''});tmark();trkMain()}
+ else if(a=='delev'){r.events.splice(+b.dataset.ei,1);tmark();trkMain()}});
+// Changing the status dropdown re-renders nothing; the website draws the progress bar from it.
+
+const trkJs=()=>{trk.updated=new Date().toISOString().slice(0,10);
+ return'/* Shipment tracking data. Managed from admin.html (Shipment tracking tab).\n   Tracking numbers are not stored here, only a one-way hash of each. */\nwindow.TRACKING = '+JSON.stringify(trk,null,2)+';\n'};
+
+// connection details
+const loc=location.hostname.endsWith('github.io')?[location.hostname.split('.')[0],location.pathname.split('/')[1]||'']:['',''];
+const st=localStorage.getItem('evl')||sessionStorage.getItem('evl');
+const cfg=st?JSON.parse(st):{o:loc[0],r:loc[1],br:'main',tk:''};
+$('#o').value=cfg.o;$('#r').value=cfg.r;$('#br').value=cfg.br;$('#tk').value=cfg.tk;$('#rm').checked=!!localStorage.getItem('evl');
+if(!cfg.tk)$('#conn').open=true;
+const saveCfg=()=>{const c={o:$('#o').value.trim(),r:$('#r').value.trim(),br:$('#br').value.trim()||'main',tk:$('#tk').value.trim()};
+ localStorage.removeItem('evl');sessionStorage.removeItem('evl');($('#rm').checked?localStorage:sessionStorage).setItem('evl',JSON.stringify(c));return c};
+
+const js=()=>'window.SITE = '+JSON.stringify(data,null,2)+';\n';
+const b64=s=>btoa(unescape(encodeURIComponent(s)));
+async function gh(c,method,path,body){
+ const u=`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`+(method=='GET'?`?ref=${c.br}`:'');
+ return fetch(u,{method,headers:{Authorization:'Bearer '+c.tk,Accept:'application/vnd.github+json'},body:body&&JSON.stringify(body)})}
+$('#pub').onclick=async()=>{
+ const c=saveCfg(),say=m=>$('#st').textContent=m;
+ if(!c.o||!c.r||!c.tk){$('#conn').open=true;say('Fill in the GitHub details first');return}
+ $('#pub').disabled=true;
+ try{
+  for(const p of [...pending]){say('Uploading '+p+'…');
+   const g=await gh(c,'GET',p),sha=g.ok?(await g.json()).sha:undefined;
+   const r=await gh(c,'PUT',p,{message:'Add picture',content:shown[p].split(',')[1],branch:c.br,sha});
+   if(!r.ok)throw new Error(r.status+' while uploading '+p);pending.delete(p)}
+  say('Saving content…');
+  const g=await gh(c,'GET','data.js'),sha=g.ok?(await g.json()).sha:undefined;
+  const r=await gh(c,'PUT','data.js',{message:'Update site content',content:b64(js()),branch:c.br,sha});
+  if(!r.ok)throw new Error(r.status+' '+((await r.json()).message||''));
+  if(trkDirty){say('Saving tracking…');
+   const g2=await gh(c,'GET','tracking.js'),sha2=g2.ok?(await g2.json()).sha:undefined;
+   const r2=await gh(c,'PUT','tracking.js',{message:'Update shipment tracking',content:b64(trkJs()),branch:c.br,sha:sha2});
+   if(!r2.ok)throw new Error(r2.status+' '+((await r2.json()).message||''));trkDirty=false}
+  dirty=false;say('Published. The site updates in about a minute.');
+ }catch(err){say('Failed: '+err.message)}
+ $('#pub').disabled=false};
+function save(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+$('#dl').onclick=()=>{save('data.js',new Blob([js()],{type:'text/javascript'}));if(trkDirty)save('tracking.js',new Blob([trkJs()],{type:'text/javascript'}));
+ pending.forEach(p=>fetch(shown[p]).then(r=>r.blob()).then(b=>save(p.split('/').pop(),b)));
+ $('#st').textContent='Downloaded. Put data.js and tracking.js in the main folder and pictures in images/'};
+render();
+</script>
+</body>
+</html>
