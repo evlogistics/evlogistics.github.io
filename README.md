@@ -3,6 +3,7 @@
 A fast, responsive static website for GitHub Pages. No build step or installs needed.
 
 ## What's new in this version
+- **Search engine (SEO) upgrade.** The home page content is now also written as plain HTML so Google, Bing and social-media previews can read it without running JavaScript. There is one clear page title, description, canonical link, social-share image and structured business data (LocalBusiness, with your services, address, phone and hours). Five new service pages (`/services/...`), a `sitemap.xml`, `robots.txt` and a `404.html` were added, and pictures were compressed (about 2.8 MB down to about 1.5 MB). See "Search engine setup" below.
 - **Shipment tracking.** A "Track your shipment" section sits right under the top slides (and in the menu). Customers type their tracking number and see status, route, estimated arrival, a progress bar and the full update history. Links like `https://your-site/?track=EVL-ABCDE-12345` open straight to the result, so you can put them in emails and WhatsApp messages. See "Shipment tracking" below.
 - **Quote form now uses Web3Forms** (see "Contact form"), and works on phones, tablets and desktops. The header menu now collapses to the burger button below 1080px wide so it never overflows.
 - **Font styles.** Nine professional presets to choose from. See "Choosing a font" below.
@@ -25,6 +26,11 @@ A fast, responsive static website for GitHub Pages. No build step or installs ne
 | `tracking.js` | **Shipment records** (managed from the Shipment tracking tab in `admin.html`) |
 | `shared.js` | Font presets, tracking stages and the tracking-number hash |
 | `admin.html` | Optional browser editor for `data.js` and pictures |
+| `services/<name>/index.html` | One page per service (generated, see "Search engine setup") |
+| `sitemap.xml`, `robots.txt`, `404.html` | Search engine files and the "page not found" page (generated) |
+| `og-image.jpg` | The picture shown when the site is shared on WhatsApp, Facebook, LinkedIn and similar |
+| `page.js` | Menu, dark-mode switch and header behaviour for the service pages |
+| `_tools/prerender.py`, `_tools/service-pages.json` | The search engine build step and the wording of the service pages |
 | `images/`, `logo.jpeg`, `logo-mark.png`, `favicon.png`, `apple-touch-icon.png` | Pictures and icons |
 
 ## Preview locally
@@ -59,6 +65,27 @@ The access key is designed to be public (it only allows sending to the email you
 If `web3formsKey` is empty, the form falls back to Formspree (`site.formUrl`) and then to FormSubmit, which needs its own one-time email activation.
 
 If a request cannot be sent, the visitor keeps what they typed and sees WhatsApp and email buttons that carry their details, plus your phone number. To see the exact reason a send failed, open the browser console (F12) and look for `Quote form not delivered:`.
+
+## Search engine setup
+**After you upload this version**
+1. Upload the **contents** of this folder to the root of your repository (replace the old files). Keep the `services` and `_tools` folders.
+2. Open `https://evlogistics.github.io/sitemap.xml` and `https://evlogistics.github.io/robots.txt` in a browser to confirm they load.
+3. In Google Search Console, go to **Sitemaps**, add `sitemap.xml` and submit it (remove the older one if it is listed). Then use **URL Inspection** on the home page and each service page and press **Request indexing**.
+4. Check how it looks with Google's Rich Results Test (search.google.com/test/rich-results) on the home page, and with PageSpeed Insights (pagespeed.web.dev) for the speed score.
+
+**When you change content**
+`data.js` is still the one place for text and picture choices, and `admin.html` still publishes it. The browser always shows the latest `data.js`. The plain-HTML copy that search engines read first is refreshed by the build step, so after changing wording, services or contact details, run it once:
+
+    python3 _tools/prerender.py
+
+(or send the updated folder to your assistant to rebuild). Run it from the main folder, then upload the changed files (`index.html`, the `services` folder, `sitemap.xml`). Page titles, descriptions and the website address are set in the `site` section of `data.js` (`seoTitle`, `seoDescription`, `url`, and `sameAs` for your Google Business Profile, Facebook, LinkedIn and similar links). If you move to your own domain, change `url` and run the build step again.
+
+**Things that help ranking but cannot be done in code**
+- Keep your name, address and phone number **exactly the same** on the website, Google Business Profile and any directory listing.
+- On your Google Business Profile, add the website address, pick the main category "Freight forwarding service", list your services, upload real photos, and ask happy customers for reviews.
+- Add your Google Business Profile and social links to `sameAs` in `data.js`, then rebuild.
+- Replace the illustrative pictures with real photos (describe each one in the Gallery and Services tabs of the admin).
+- Get listed on trusted local directories and have partners link to your site.
 
 ## Before you call the site live
 - Check the phone, email, WhatsApp number and address in `data.js`, and test every link.

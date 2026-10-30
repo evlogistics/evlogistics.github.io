@@ -68,7 +68,6 @@
 
   /* ---------- basic content ---------- */
   var name = I.name || 'Eagle Vision Logistics';
-  document.title = name + ' | Freight Forwarding & Cargo Services in Ghana';
   $('#nm').textContent = name;
   $$('.nm2').forEach(function (e) { e.textContent = name; });
   $('#yr').textContent = new Date().getFullYear();
@@ -86,7 +85,7 @@
 
   /* ---------- hero ---------- */
   var heroes = L('hero');
-  $('#slides').innerHTML = heroes.map(function (h, k) {
+  var heroHtml = heroes.map(function (h, k) {
     var tag = k === 0 ? 'h1' : 'h2';
     var second = (h.link && h.link !== '#contact') ? '<a class="btn ghost" href="#contact">Get a quote</a>' : '';
     return '<div class="slide" role="group" aria-roledescription="slide" aria-label="Slide ' + (k + 1) + ' of ' + heroes.length + '">' +
@@ -94,6 +93,8 @@
       '<div class="wrap"><' + tag + '>' + esc(h.title) + '</' + tag + '><p>' + esc(h.text) + '</p>' +
       '<div class="actions">' + (h.btn ? '<a class="btn" href="' + esc(h.link || '#contact') + '">' + esc(h.btn) + '</a>' : '') + second + '</div></div></div>';
   }).join('');
+  var slidesEl = $('#slides');
+  if (!(slidesEl.getAttribute('data-pr') && slidesEl.children.length === heroes.length)) slidesEl.innerHTML = heroHtml;
 
   var slides = $$('.slide'), dotsBox = $('#dots'), idx = 0, timer = null, paused = reduced, hovering = false;
   var pauseBtn = $('#pause');
@@ -127,18 +128,22 @@
   $('#svcs').innerHTML = svcs.map(function (s, i) {
     var cls = '';
     if (r === 2 && i >= n - 2) cls = ' w3'; else if (r === 1 && i === n - 1) cls = ' w6';
-    return '<button type="button" class="svc' + cls + '" data-i="' + i + '" aria-haspopup="dialog">' +
-      '<div class="ph">' + (s.image ? '<img src="' + src(s.image) + '" alt="" loading="lazy" decoding="async">' : '') + '</div>' +
-      '<div class="body"><h3>' + esc(s.title) + '</h3><p>' + esc(s.short) + '</p><span class="more">Learn more ' + svg(IC.arrow) + '</span></div></button>';
+    var link = !!s.slug, tag = link ? 'a' : 'button';
+    return '<' + tag + (link ? ' href="services/' + esc(s.slug) + '/"' : ' type="button"') + ' class="svc' + cls + '" data-i="' + i + '" aria-haspopup="dialog">' +
+      '<div class="ph">' + (s.image ? '<img src="' + src(s.image) + '" alt="' + esc(s.imageAlt || '') + '" loading="lazy" decoding="async">' : '') + '</div>' +
+      '<div class="body"><h3>' + esc(s.title) + '</h3><p>' + esc(s.short) + '</p><span class="more">Learn more ' + svg(IC.arrow) + '</span></div></' + tag + '>';
   }).join('');
   if (!n) $('#services').remove();
 
   var dlg = $('#dlg');
   $('#svcs').addEventListener('click', function (e) {
     var c = e.target.closest('.svc'); if (!c) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button > 0) return; // let the browser open the page
+    e.preventDefault();
     var s = svcs[+c.dataset.i];
     dlg.dataset.service = s.title;
     $('#dt').textContent = s.title; $('#dp').textContent = s.more || s.short || '';
+    var dm = $('#dm'); if (dm) { if (s.slug) { dm.href = 'services/' + s.slug + '/'; dm.hidden = false; } else dm.hidden = true; }
     $('#dimg').style.backgroundImage = s.image ? 'url("' + encodeURI(s.image) + '")' : 'none';
     dlg.showModal();
   });
@@ -168,7 +173,7 @@
     return '<div class="vcard"><span class="num" aria-hidden="true">' + (i < 9 ? '0' : '') + (i + 1) + '</span><span class="ico">' + svg(valIcon(v.title)) + '</span><h3>' + esc(v.title) + '</h3><p>' + esc(v.text) + '</p></div>';
   }).join('');
   if (!L('values').length) $('#values').remove();
-  else if (I.brochure) $('#broL').href = I.brochure; else $('#bro').remove();
+  else if (I.brochure) { $('#bro').hidden = false; $('#broL').href = I.brochure; } else $('#bro').remove();
 
   /* ---------- gallery + lightbox ---------- */
   var gal = L('gallery');
@@ -187,6 +192,7 @@
   lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
 
   /* ---------- team, quote, partners ---------- */
+  ['team', 'testi', 'navTeam'].forEach(function (id) { var el = $('#' + id); if (el) el.hidden = false; });
   var team = L('team');
   $('#tm').innerHTML = team.map(function (m) {
     return '<div>' + (m.image ? '<img src="' + src(m.image) + '" alt="' + esc(m.name) + '" loading="lazy" decoding="async">' : '<div class="noimg"></div>') + '<h3>' + esc(m.name) + '</h3><p>' + esc(m.role) + '</p></div>';
@@ -209,6 +215,7 @@
     (mapUrl ? '<a class="btn sm ghost-ink" target="_blank" rel="noopener" href="' + esc(mapUrl) + '">Open in Maps</a>' : '');
 
   var navTargets = [['#track', 'Track shipment'], ['#services', 'Services'], ['#about', 'About us'], ['#values', 'Core values'], ['#gallery', 'Gallery'], ['#contact', 'Contact']].filter(function (x) { return $(x[0]); });
+  $('#fServices').innerHTML = svcs.filter(function (x) { return x.slug; }).map(function (x) { return '<li><a href="services/' + esc(x.slug) + '/">' + esc(x.title) + '</a></li>'; }).join('');
   $('#fLinks').innerHTML = navTargets.map(function (x) { return '<li><a href="' + x[0] + '">' + x[1] + '</a></li>'; }).join('');
   $('#fContact').innerHTML =
     (addr ? '<li>' + svg(IC.pin) + '<span>' + esc(addr) + '</span></li>' : '') +
@@ -219,6 +226,7 @@
 
   // search-engine data
   try {
+    if (document.querySelector('script[type="application/ld+json"]')) throw 0;
     var ld = { '@context': 'https://schema.org', '@type': 'LocalBusiness', name: name, url: location.href.split('#')[0] };
     if (phone) ld.telephone = phone; if (email) ld.email = email;
     if (addr) ld.address = { '@type': 'PostalAddress', streetAddress: addr, addressCountry: 'GH' };

@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Eagle Vision Logistics sitemap.
-  Upload this file to the root of the site, next to index.html, so it is reachable at
-  https://evlogistics.github.io/sitemap.xml
-  Then submit that address in Google Search Console.
-
-  The site is a single page, so it has one public address. Section links such as
-  #services are anchors on that page; search engines ignore them, so they are not listed.
-  admin.html and ?track= links are left out on purpose.
--->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://evlogistics.github.io/</loc>
     <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://evlogistics.github.io/services/freight-forwarding/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://evlogistics.github.io/services/customs-clearance/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://evlogistics.github.io/services/warehousing-storage/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://evlogistics.github.io/services/stevedoring-shore-handling/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://evlogistics.github.io/services/shipment-tracking/</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>

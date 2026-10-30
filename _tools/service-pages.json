@@ -1,0 +1,123 @@
+{
+  "freight-forwarding": {
+    "title": "Freight Forwarding in Tema, Ghana | Eagle Vision Logistics",
+    "description": "Sea, air and road freight forwarding from Tema, Ghana. Eagle Vision Logistics coordinates bookings, documentation and tracking. Request a quote.",
+    "h1": "International Freight Forwarding in Tema, Ghana",
+    "lead": "One point of contact for moving cargo into and out of Ghana, from the first booking to final delivery.",
+    "about": [
+      "International freight forwarding means arranging the movement of goods between countries on your behalf. Eagle Vision Logistics manages end-to-end international freight forwarding. We handle bookings, documentation and tracking, and we work with authorised carriers so that your shipment moves efficiently and complies with applicable shipping regulations.",
+      "Whether you are importing goods into Ghana or exporting them to another market, the right plan depends on your cargo, your timeline and your budget. Tell us what you are moving and where it needs to go, and we will propose a plan and a quote."
+    ],
+    "covers": [
+      "Sea freight for containers and larger consignments",
+      "Air freight for urgent or high-value cargo",
+      "Road freight and inland haulage",
+      "Multimodal moves that combine sea, air and road",
+      "Booking, documentation and tracking coordinated in one place"
+    ],
+    "needs_title": "What to tell us to get a quote",
+    "needs": [
+      "What the cargo is and how it is packed",
+      "Weight or dimensions, and the number of packages or containers",
+      "Where it is collected from and where it needs to go",
+      "When it needs to arrive",
+      "Any special handling needs"
+    ]
+  },
+  "customs-clearance": {
+    "title": "Customs Clearance Support in Ghana | Eagle Vision Logistics",
+    "description": "Guidance on customs paperwork and the clearance process for cargo moving through Ghana, coordinated with licensed providers. Request a quote.",
+    "h1": "Customs Clearance & Brokerage in Ghana",
+    "lead": "Clear guidance on the paperwork and process your shipment needs to pass through customs.",
+    "about": [
+      "Customs requirements depend on what you ship and where it is going. We can discuss the documents and information your shipment needs and coordinate with appropriate licensed or authorised service providers where required.",
+      "Duties, taxes and regulatory approvals depend on the cargo and the applicable rules, so it helps to raise your shipment with us early, ideally before it is booked. Starting early makes it easier to avoid delays caused by missing paperwork."
+    ],
+    "covers": [
+      "A walk-through of the documents and information your shipment needs",
+      "Coordination with licensed or authorised providers where required",
+      "Support with paperwork questions as your cargo moves through the process",
+      "Updates on progress so you know where things stand"
+    ],
+    "needs_title": "Documents and details that usually help",
+    "needs": [
+      "Commercial invoice and packing list",
+      "Bill of lading or airway bill",
+      "Description and value of the goods",
+      "Any permits or approvals that apply to your type of cargo",
+      "Your timeline for clearance and delivery"
+    ]
+  },
+  "warehousing-storage": {
+    "title": "Warehousing & Storage in Tema | Eagle Vision Logistics",
+    "description": "Warehousing, storage and distribution planning in Tema, Ghana. Tell Eagle Vision Logistics about your cargo and timing to explore options.",
+    "h1": "Warehousing, Storage & Distribution in Tema, Ghana",
+    "lead": "Storage and onward movement planned around your cargo and your delivery schedule.",
+    "about": [
+      "Goods often need to wait somewhere between arriving at the port and reaching customers. Tell us about your storage duration, cargo type, volume and distribution needs so suitable warehousing and delivery arrangements can be explored.",
+      "Because storage is usually one step in a longer journey, we look at it together with your freight and clearance plans, so cargo can move on without avoidable gaps."
+    ],
+    "covers": [
+      "Short-term and longer-term storage options",
+      "Planning for how goods are received and held",
+      "Onward distribution to your customers or sites",
+      "Coordination with your freight and clearance plans"
+    ],
+    "needs_title": "What to tell us to get a quote",
+    "needs": [
+      "Type of cargo and how it is packed",
+      "Volume, and the number of pallets, packages or containers",
+      "How long you expect to store it",
+      "Where it needs to go afterwards, and when",
+      "Any special handling or storage conditions"
+    ]
+  },
+  "stevedoring-shore-handling": {
+    "title": "Stevedoring & Shore Handling | Eagle Vision Logistics",
+    "description": "Coordination of port handling and cargo transfer with licensed stevedores and port service providers. Request a quote from Eagle Vision Logistics.",
+    "h1": "Stevedoring & Shore Handling",
+    "lead": "Coordination of port handling and cargo transfer, so cargo moves between ship and shore as planned.",
+    "about": [
+      "Stevedoring covers the loading and unloading of cargo at the port, and shore handling covers the movement of that cargo once it is off the vessel. We can discuss the handling requirements for your shipment and coordinate with appropriate licensed stevedores and authorised port service providers where required.",
+      "Procedures and charges depend on the cargo and the applicable port regulations, so share the details of your cargo and the vessel schedule early and we will help you plan around them."
+    ],
+    "covers": [
+      "Discussion of the handling requirements for your cargo",
+      "Coordination with licensed stevedores and authorised port service providers",
+      "Planning around vessel arrival and cargo transfer",
+      "Links with your warehousing and onward transport plans"
+    ],
+    "needs_title": "What to tell us to get a quote",
+    "needs": [
+      "Cargo type, weight and dimensions",
+      "Vessel name and expected arrival, if known",
+      "Port of discharge",
+      "Any lifting, equipment or special handling needs",
+      "Where the cargo goes after it leaves the port"
+    ]
+  },
+  "shipment-tracking": {
+    "title": "Shipment Tracking & Visibility | Eagle Vision Logistics",
+    "description": "Check the status, route and estimated arrival of your shipment with your Eagle Vision Logistics tracking number. Clear updates from booking to delivery.",
+    "h1": "Supply Chain Visibility & Shipment Tracking",
+    "lead": "See where your shipment is and what has happened so far, using the tracking number from your booking.",
+    "about": [
+      "Every shipment booked with Eagle Vision Logistics has a tracking number. Enter it on our website to see the current status, the route, the estimated arrival date and the history of updates for that shipment.",
+      "Updates move through clear stages: Booked, Cargo received, In transit, Arrived at destination, Customs clearance, Out for delivery and Delivered. If there is a delay or a hold on your shipment, a notice appears with the update so you are not left guessing."
+    ],
+    "covers": [
+      "Current status shown on a progress bar",
+      "Origin, destination and route",
+      "Estimated arrival date",
+      "A dated history of updates",
+      "Tracking links you can share by email or WhatsApp"
+    ],
+    "needs_title": "What you need",
+    "needs": [
+      "Your tracking number, for example EVL-ABCDE-12345, from your booking confirmation",
+      "Any web browser on your phone or computer"
+    ],
+    "cta_label": "Track your shipment",
+    "cta_href": "#track"
+  }
+}

@@ -3,13 +3,20 @@ window.SITE = {
     "name": "Eagle Vision Logistics",
     "phone": "+233 55 780 4990",
     "email": "eaglevisionlogistics5@gmail.com",
-    "address": "TDC Affordable Housing, Tema, Community 26",
+    "address": "Kpone Affordable Housing, Tema",
     "hours": "Monday–Friday: 8:00 AM–5:00 PM | Saturday: By appointment",
     "whatsapp": "+233536430040",
     "formUrl": "",
     "web3formsKey": "e8c76f0e-03f9-44e4-8390-fedf4cf20663",
     "font": "classic",
-    "brochure": ""
+    "brochure": "",
+    "url": "https://evlogistics.github.io",
+    "seoTitle": "Eagle Vision Logistics | Freight Forwarding in Tema, Ghana",
+    "seoDescription": "Eagle Vision Logistics in Tema, Ghana: international freight forwarding, customs clearance support, warehousing, port handling and shipment tracking.",
+    "city": "Tema",
+    "region": "Greater Accra",
+    "country": "GH",
+    "sameAs": []
   },
   "hero": [
     {
@@ -92,31 +99,41 @@ window.SITE = {
       "title": "International Freight Forwarding",
       "short": "Information and coordination for international transport",
       "more": "We manage end-to-end international freight forwarding and handle bookings, documentation and tracking and work with authorized carriers to ensure your shipment moves efficiently and complies with applicable shipping regulations.",
-      "image": "images/services-mvtjzwjz.jpg"
+      "image": "images/services-mvtjzwjz.jpg",
+      "slug": "freight-forwarding",
+      "imageAlt": "Container ship, cargo aircraft and freight truck showing sea, air and road freight"
     },
     {
       "title": "Customs Clearance & Brokerage",
       "short": "Guidance on paperwork and the clearance process.",
       "more": "We can discuss the documents and information needed for your shipment and coordinate with appropriate licensed or authorised service providers where required. Duties, taxes and regulatory approvals depend on the cargo and applicable rules.",
-      "image": "images/services-mvtk1qkz.jpg"
+      "image": "images/services-mvtk1qkz.jpg",
+      "slug": "customs-clearance",
+      "imageAlt": "Logistics officer in a high-visibility vest reviewing shipping documents at a container yard"
     },
     {
       "title": "Warehousing, Storage & Distribution",
       "short": "Storage and onward movement planning",
       "more": "Tell us about your storage duration, cargo type, volume and distribution needs so suitable warehousing and delivery arrangements can be explored.",
-      "image": "images/services-mvtl7hjy.jpg"
+      "image": "images/services-mvtl7hjy.jpg",
+      "slug": "warehousing-storage",
+      "imageAlt": "Forklift and pallets of boxed goods inside a warehouse"
     },
     {
       "title": "Stevedoring & Shore Handling",
       "short": "Coordination of port handling and transfer",
       "more": "We can discuss the handling requirements for your shipment and coordinate with appropriate licensed stevedores and authorized port service providers where required. Procedures and charges depend on the cargo and applicable port regulations.",
-      "image": "images/services-mvtlbccc.jpg"
+      "image": "images/services-mvtlbccc.jpg",
+      "slug": "stevedoring-shore-handling",
+      "imageAlt": "Port workers in safety gear beside shipping containers and cranes at sunset"
     },
     {
       "title": "Supply Chain Visibility & Tracking",
       "short": "Track your cargo in real time",
       "more": "With Eagle Vision Logistics' tracking system, you can monitor your shipment from origin to destination in real time. Our platform provides live location updates, status reports and estimated arrival times, giving you full visibility and peace of mind for all your cargo.",
-      "image": "images/services-mvtn01hd.jpg"
+      "image": "images/services-mvtn01hd.jpg",
+      "slug": "shipment-tracking",
+      "imageAlt": "Team member in a high-visibility vest explaining a shipment route map in an office"
     }
   ],
   "gallery": [
