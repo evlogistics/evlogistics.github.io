@@ -4,6 +4,7 @@ A fast, responsive static website for GitHub Pages. No build step or installs ne
 
 ## What's new in this version
 - **Shipment tracking.** A "Track your shipment" section sits right under the top slides (and in the menu). Customers type their tracking number and see status, route, estimated arrival, a progress bar and the full update history. Links like `https://your-site/?track=EVL-ABCDE-12345` open straight to the result, so you can put them in emails and WhatsApp messages. See "Shipment tracking" below.
+- **Quote form now uses Web3Forms** (see "Contact form"), and works on phones, tablets and desktops. The header menu now collapses to the burger button below 1080px wide so it never overflows.
 - **Font styles.** Nine professional presets to choose from. See "Choosing a font" below.
 - **Core values** reworded to be tighter and more polished, shown as numbered cards
 - **Hover animations** across the site: cards tilt and glow toward the mouse, icons spin to gold, buttons get a shine sweep, gallery photos show a zoom badge, and the hero photo drifts gently with the mouse. Touch screens and visitors who prefer reduced motion get the calm version.
@@ -45,17 +46,19 @@ If you are replacing an earlier version, you can delete `images/port-hero.png` a
 ## Dark mode: how it is saved
 The choice is stored in the visitor's browser (`localStorage`, key `evl-theme`). It is applied before the page paints, so there is no flash of the wrong theme. To reset it while testing, clear the site's data in your browser.
 
-## Contact form
-Quote requests go to the email in `data.js` through FormSubmit. FormSubmit only starts delivering after the address has been **activated**, and that can only be done from the live website:
+## Contact form (Web3Forms)
+Quote requests are sent through [Web3Forms](https://web3forms.com), a free service that emails each request to you. No activation step on the live site is needed, just a free access key.
 
-1. Publish the site and open it at its real `https://` address (the form cannot send from a file opened on your computer).
-2. Send one test quote request yourself.
-3. Open the inbox of the email in `data.js` (check Spam and Promotions too) and click the activation link FormSubmit sends.
-4. Send a second test. If it arrives in the inbox, the form is live.
+1. Go to https://web3forms.com and enter the email address that should **receive** quote requests.
+2. Web3Forms emails you an **access key** (a code like `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`).
+3. Put it in the site: open `admin.html`, choose **Company and contact**, paste it into **Web3Forms access key** and publish. Or edit `data.js` and set `"web3formsKey": "your-key-here"`.
+4. Open the live site, send yourself a test quote, and check that it arrives (also check Spam the first time).
 
-Requests sent before step 3 will not reach you, so do not share the site widely until you have seen a test arrive. To use Formspree instead, put its link in `site.formUrl` in `data.js`.
+The access key is designed to be public (it only allows sending to the email you registered), so it is safe to keep in `data.js`.
 
-If a request cannot be sent, the visitor sees WhatsApp and email buttons that carry their details, plus your phone number.
+If `web3formsKey` is empty, the form falls back to Formspree (`site.formUrl`) and then to FormSubmit, which needs its own one-time email activation.
+
+If a request cannot be sent, the visitor keeps what they typed and sees WhatsApp and email buttons that carry their details, plus your phone number. To see the exact reason a send failed, open the browser console (F12) and look for `Quote form not delivered:`.
 
 ## Before you call the site live
 - Check the phone, email, WhatsApp number and address in `data.js`, and test every link.

@@ -266,13 +266,28 @@
     if ($('[name="_honey"]', form).value) return;                 // bots fill the hidden field
     if (!form.checkValidity()) { form.classList.add('was-validated'); form.reportValidity(); return; }
 
-    var endpoint = (I.formUrl && !/YOUR_FORM_ID/.test(I.formUrl)) ? I.formUrl : (email ? 'https://formsubmit.co/ajax/' + email : '');
+    // Which service receives the form: Web3Forms (if a key is set), else Formspree link, else FormSubmit.
+    var w3key = String(I.web3formsKey || '').trim(), body = null;
+    var endpoint = w3key ? 'https://api.web3forms.com/submit'
+      : (I.formUrl && !/YOUR_FORM_ID/.test(I.formUrl)) ? I.formUrl : (email ? 'https://formsubmit.co/ajax/' + email : '');
+    if (w3key) {
+      body = new FormData();
+      body.append('access_key', w3key);
+      body.append('subject', 'New quote request from ' + val('name') + ' - ' + name + ' website');
+      body.append('from_name', name + ' website');
+      body.append('name', val('name'));
+      body.append('email', val('email'));
+      if (val('phone')) body.append('Phone / WhatsApp', val('phone'));
+      body.append('Service required', val('service'));
+      if (val('route')) body.append('Shipment route', val('route'));
+      body.append('Cargo details', val('message'));
+    }
     if (!endpoint) { say('err', '<strong>The form is not connected yet.</strong> Please contact us directly:' + fallbackHtml()); return; }
 
     var who = val('name').split(/\s+/)[0];
     sendBtn.disabled = true; sendBtn.classList.add('is-loading'); sendBtn.textContent = 'Sending…'; note.hidden = true;
 
-    fetch(endpoint, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+    fetch(endpoint, { method: 'POST', body: body || new FormData(form), headers: { 'Accept': 'application/json' } })
       .then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (j) {
           if (!res.ok || j.success === false || j.success === 'false') throw new Error(j.message || ('HTTP ' + res.status));

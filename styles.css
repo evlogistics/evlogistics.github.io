@@ -239,7 +239,7 @@ input,textarea,select{font:inherit;font-weight:400;color:var(--ink);padding:.8re
 input::placeholder,textarea::placeholder{color:var(--mute);opacity:.85}
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px rgba(26,86,168,.3);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 30%,transparent)}
 textarea{min-height:140px;resize:vertical}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.form-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:1.1rem}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .form-note{padding:.8rem 1rem;border-radius:6px;font-weight:500;font-size:.97rem;border-left:4px solid}
 .form-note.ok{color:var(--ok);background:var(--ok-bg);border-color:var(--ok)}
@@ -531,4 +531,28 @@ textarea{min-height:140px;resize:vertical}
   .trk-form{flex-direction:column}
   .trk-form input{padding:.7rem .8rem}
   .trk-form .btn{width:100%}
+}
+
+/* Collapse the menu into the burger a little earlier so the header never overflows on small laptops and tablets. */
+@media(max-width:1080px){
+  .burger{display:block}
+  nav{position:absolute;left:0;right:0;top:100%;margin:0;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 18px 30px rgba(0,0,0,.15);display:none}
+  nav.open{display:block}
+  nav ul{flex-direction:column;align-items:stretch;gap:0;padding:.4rem 1.25rem 1.1rem}
+  nav a:not(.btn){padding:.9rem 0;border-bottom:1px solid var(--line);border-radius:0}
+  nav a:not(.btn)::before{display:none}
+  nav a[aria-current]:not(.btn)::after{display:none}
+  nav a[aria-current]:not(.btn){color:var(--link);font-weight:600}
+  nav .cta{margin:.8rem 0 0}
+  nav .cta .btn{display:flex;width:100%}
+  .tools{margin-left:auto}
+}
+
+@media(max-width:340px){
+  .bar{gap:.35rem}
+  .brand{gap:.4rem}
+  .brand-name{font-size:.78rem}
+  .mark{width:36px;height:34px}.mark img{width:29px}
+  .switch{width:50px}.switch[aria-checked="true"] .knob{transform:translateX(18px)}
+  .burger{width:40px;height:40px}.burger span,.burger span::before,.burger span::after{left:10px}
 }

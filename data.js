@@ -3,10 +3,11 @@ window.SITE = {
     "name": "Eagle Vision Logistics",
     "phone": "+233 55 780 4990",
     "email": "eaglevisionlogistics5@gmail.com",
-    "address": "TDC Affordable Housing, Tema, Community 26",
+    "address": "CDC Affordable Housing, Tema, Community 26",
     "hours": "Monday–Friday: 8:00 AM–5:00 PM | Saturday: By appointment",
     "whatsapp": "+233536430040",
     "formUrl": "",
+    "web3formsKey": "e8c76f0e-03f9-44e4-8390-fedf4cf20663",
     "font": "classic",
     "brochure": ""
   },
