@@ -269,6 +269,25 @@
     note.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'nearest' });
   }
 
+  // Reference such as QR-261030-K7X2 (date + 4 random characters). Easy to quote on the phone or WhatsApp.
+  function makeRef() {
+    var d = new Date(), pad = function (n) { return (n < 10 ? '0' : '') + n; }, abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', r = '';
+    for (var i = 0; i < 4; i++) r += abc.charAt(Math.floor(Math.random() * abc.length));
+    return 'QR-' + pad(d.getFullYear() % 100) + pad(d.getMonth() + 1) + pad(d.getDate()) + '-' + r;
+  }
+  // Optional: also add the request as a new row in your Google Sheet (see README, "Quote requests in a spreadsheet").
+  // Runs alongside Web3Forms; if it fails, the email still arrives and the visitor sees nothing different.
+  function sendToSheet(ref) {
+    var url = String(I.sheetUrl || '').trim();
+    if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)) return;
+    try {
+      var sp = new URLSearchParams();
+      sp.append('ref', ref); sp.append('name', val('name')); sp.append('email', val('email')); sp.append('phone', val('phone'));
+      sp.append('service', val('service')); sp.append('route', val('route')); sp.append('message', val('message'));
+      fetch(url, { method: 'POST', mode: 'no-cors', body: sp, keepalive: true }).catch(function () {});
+    } catch (err) { /* never block the quote form */ }
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if ($('[name="_honey"]', form).value) return;                 // bots fill the hidden field
@@ -276,6 +295,7 @@
 
     // Which service receives the form: Web3Forms (if a key is set), else Formspree link, else FormSubmit.
     var w3key = String(I.web3formsKey || '').trim(), body = null;
+    var ref = makeRef();                                            // quote reference, same in the email and the spreadsheet
     var endpoint = w3key ? 'https://api.web3forms.com/submit'
       : (I.formUrl && !/YOUR_FORM_ID/.test(I.formUrl)) ? I.formUrl : (email ? 'https://formsubmit.co/ajax/' + email : '');
     if (w3key) {
@@ -283,6 +303,7 @@
       body.append('access_key', w3key);
       body.append('subject', 'New quote request from ' + val('name') + ' - ' + name + ' website');
       body.append('from_name', name + ' website');
+      body.append('Reference', ref);
       body.append('name', val('name'));
       body.append('email', val('email'));
       if (val('phone')) body.append('Phone / WhatsApp', val('phone'));
@@ -295,6 +316,7 @@
     var who = val('name').split(/\s+/)[0];
     sendBtn.disabled = true; sendBtn.classList.add('is-loading'); sendBtn.textContent = 'Sending…'; note.hidden = true;
 
+    sendToSheet(ref);
     fetch(endpoint, { method: 'POST', body: body || new FormData(form), headers: { 'Accept': 'application/json' } })
       .then(function (res) {
         return res.json().catch(function () { return {}; }).then(function (j) {
@@ -302,7 +324,7 @@
         });
       })
       .then(function () {
-        say('ok', '<strong>Request sent.</strong> Thank you' + (who ? ', ' + esc(who) : '') + '. We will reply with a quote shortly.');
+        say('ok', '<strong>Request sent.</strong> Thank you' + (who ? ', ' + esc(who) : '') + '. We will reply with a quote shortly.<br>Your reference: <strong>' + esc(ref) + '</strong>');
         form.reset(); form.classList.remove('was-validated');
       })
       .catch(function (err) {

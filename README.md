@@ -3,6 +3,7 @@
 A fast, responsive static website for GitHub Pages. No build step or installs needed.
 
 ## What's new in this version
+- **Quote requests also land in a Google Sheet.** Every quote request is added as a new row (with a reference such as `QR-261030-K7X2`) in a spreadsheet in your Gmail account's Google Drive, next to the Web3Forms email. Status dropdown (New / Quoted / Won / Lost), quote amount, follow-up date and notes columns are included. See "Quote requests in a spreadsheet" below.
 - **Search engine (SEO) upgrade.** The home page content is now also written as plain HTML so Google, Bing and social-media previews can read it without running JavaScript. There is one clear page title, description, canonical link, social-share image and structured business data (LocalBusiness, with your services, address, phone and hours). Five new service pages (`/services/...`), a `sitemap.xml`, `robots.txt` and a `404.html` were added, and pictures were compressed (about 2.8 MB down to about 1.5 MB). See "Search engine setup" below.
 - **Shipment tracking.** A "Track your shipment" section sits right under the top slides (and in the menu). Customers type their tracking number and see status, route, estimated arrival, a progress bar and the full update history. Links like `https://your-site/?track=EVL-ABCDE-12345` open straight to the result, so you can put them in emails and WhatsApp messages. See "Shipment tracking" below.
 - **Quote form now uses Web3Forms** (see "Contact form"), and works on phones, tablets and desktops. The header menu now collapses to the burger button below 1080px wide so it never overflows.
@@ -25,6 +26,7 @@ A fast, responsive static website for GitHub Pages. No build step or installs ne
 | `data.js` | **All the text and picture choices.** Edit this to change content |
 | `tracking.js` | **Shipment records** (managed from the Shipment tracking tab in `admin.html`) |
 | `shared.js` | Font presets, tracking stages and the tracking-number hash |
+| `_tools/quote-sheet.gs` | The Google Apps Script that writes each quote request into your spreadsheet (copy it into Google, see below) |
 | `admin.html` | Optional browser editor for `data.js` and pictures |
 | `services/<name>/index.html` | One page per service (generated, see "Search engine setup") |
 | `sitemap.xml`, `robots.txt`, `404.html` | Search engine files and the "page not found" page (generated) |
@@ -65,6 +67,29 @@ The access key is designed to be public (it only allows sending to the email you
 If `web3formsKey` is empty, the form falls back to Formspree (`site.formUrl`) and then to FormSubmit, which needs its own one-time email activation.
 
 If a request cannot be sent, the visitor keeps what they typed and sees WhatsApp and email buttons that carry their details, plus your phone number. To see the exact reason a send failed, open the browser console (F12) and look for `Quote form not delivered:`.
+
+## Quote requests in a spreadsheet
+Web3Forms keeps emailing you every request. This adds a second copy as a row in a Google Sheet, so you can sort, filter and track every quote. It uses a small Google Apps Script that runs inside **your own Google account**, free, with no extra service.
+
+**One-time setup (about 10 minutes)**
+1. Sign in to the Gmail account that should own the spreadsheet (use `eaglevisionlogistics5@gmail.com`). Go to https://sheets.google.com and create a **Blank** spreadsheet. Name it `Eagle Vision - Quote requests`.
+2. In that sheet choose **Extensions → Apps Script**. Delete the sample code, open `_tools/quote-sheet.gs` from this folder, copy everything and paste it in. Press **Save** (disk icon).
+3. In the function drop-down choose **setup** and press **Run**. Google asks for permission: **Review permissions**, choose your account, **Advanced → Go to (project name) (unsafe) → Allow**. (It says "unsafe" only because you wrote the script yourself and Google has not reviewed it.) The sheet now has its header row.
+4. Press **Deploy → New deployment**. Click the gear next to "Select type" and choose **Web app**. Set **Execute as: Me** and **Who has access: Anyone**. Press **Deploy** and copy the **Web app URL** (it ends in `/exec`).
+5. Open `admin.html`, choose **Company and contact**, paste the URL into **Google Sheet link for quote requests** and publish. (Or edit `data.js` and set `"sheetUrl": "https://script.google.com/macros/s/.../exec"`.)
+6. Open the live site, send a test quote, and check that a new row appears in the sheet (it takes a few seconds). You can also run **testRow** in the Apps Script editor to see a sample row, then delete it.
+
+**Everyday use**
+- Change the **Status** dropdown as you go: New, Quoted, Won, Lost (rows are coloured to match). Use **Quote amount**, **Follow-up date** and **Notes** for your own tracking. Use **Data → Create a filter** to filter by status or service.
+- To get the sheet as Excel: **File → Download → Microsoft Excel (.xlsx)**.
+- The **Reference** in the sheet is the same one the customer sees after sending and the one in your Web3Forms email, so you can match them.
+
+**If you change the script later:** after editing the code in Apps Script, use **Deploy → Manage deployments → pencil icon → Version: New version → Deploy**. The URL stays the same. If you ever create a brand-new deployment, the URL changes and must be pasted into the admin again.
+
+**Good to know**
+- The web app link is public, which is how the website can reach it. The script only ever **adds rows**, it cannot read your sheet, and everything a visitor types is stored as plain text, so it cannot run as a formula.
+- If the sheet link is empty or wrong, nothing breaks: the email still arrives and the visitor sees no difference.
+- Google limits how many requests a free account can handle per day, far more than a logistics site will see.
 
 ## Search engine setup
 **After you upload this version**
